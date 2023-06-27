@@ -1,0 +1,33 @@
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 400px);
+    grid-gap: 30px;
+}
+
+.center-text {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.features-comp {
+    width: 400px;
+    height: 200px;
+    border-radius: 20px;
+    color: #FFF;
+    background-color: #1E1E1E;
+    font-size: 32px;
+    font-family: Inter;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.features-music {
+    background-image: url(assets/topography.svg);
+}
+
+.features-ai {
+    background-image: url(assets/church-on-sunday.svg);
+}
