@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Req, UseGuards } from "@nestjs/common";
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from './typeorm/User';
+import { DiscordService } from "./DiscordService";
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class appController {
+    constructor(
+        @InjectRepository(User) private readonly userRepository: Repository<User>,
+        private readonly DiscordService: DiscordService
+      ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
+    @Get('guilds')
+    async status(@Req() request) {
+        if (!request.user)
+            return {
+                statusCode: 401,
+                mgs: "Unauthorized."
+            };
+        const guilds = await this.DiscordService.getUserGuilds(request.user, this.userRepository);
+        return guilds;
+    }
 }
