@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { VoiceChannelService } from '../services/voice_channel.service';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from 'src/oauth/guards/jwt.guard';
@@ -46,6 +46,30 @@ export class VoiceChannelController {
     };
   }
 
+  @Post('pause')
+  async pause(@Body() body: { guildId: string }) {
+    await this.voiceChannelService.pause(body.guildId);
+    return {
+      message: 'Paused',
+      statusCode: '200',
+      data: {
+        guildId: body.guildId,
+      },
+    };
+  }
+
+  @Post('resume')
+  async resume(@Body() body: { guildId: string }) {
+    await this.voiceChannelService.resume(body.guildId);
+    return {
+      message: 'Resumed',
+      statusCode: '200',
+      data: {
+        guildId: body.guildId,
+      },
+    };
+  }
+
   @Post('add')
   async add(@Body() body: { guildId: string; url: string }) {
     const song = await this.voiceChannelService.add(body.guildId, body.url);
@@ -78,6 +102,43 @@ export class VoiceChannelController {
     await this.voiceChannelService.skip(body.guildId);
     return {
       message: 'Skipped',
+      statusCode: '200',
+      data: {
+        guildId: body.guildId,
+      },
+    };
+  }
+
+  @Post('stop')
+  async stop(@Body() body: { guildId: string }) {
+    await this.voiceChannelService.stop(body.guildId);
+    return {
+      message: 'Stopped',
+      statusCode: '200',
+      data: {
+        guildId: body.guildId,
+      },
+    };
+  }
+
+  @Post('volume')
+  async volume(@Body() body: { guildId: string; volume: number }) {
+    await this.voiceChannelService.volume(body.guildId, body.volume);
+    return {
+      message: 'Volume Changed',
+      statusCode: '200',
+      data: {
+        guildId: body.guildId,
+        volume: body.volume,
+      },
+    };
+  }
+
+  @Post('prev')
+  async prev(@Body() body: { guildId: string }) {
+    await this.voiceChannelService.previous(body.guildId);
+    return {
+      message: 'Previous Song',
       statusCode: '200',
       data: {
         guildId: body.guildId,

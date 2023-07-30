@@ -1,4 +1,4 @@
-import { AudioPlayer, VoiceConnection } from '@discordjs/voice';
+import { AudioPlayer, AudioResource, VoiceConnection } from '@discordjs/voice';
 import { Injectable } from '@nestjs/common';
 import { Guild, Channel } from 'discord.js';
 
@@ -13,6 +13,7 @@ export class GuildsParamsService {
       voice: VoiceConnection;
       playlist: { id: number; url: string; title: string }[];
       currentSong: number;
+      currentPlaying: AudioResource;
     }
   > = new Map();
   constructor() {}
@@ -23,7 +24,7 @@ export class GuildsParamsService {
 
   set(
     guildId: string,
-    { guild, channel, player, voice, playlist, currentSong },
+    { guild, channel, player, voice, playlist, currentSong, currentPlaying },
   ) {
     this.guilds.set(guildId, {
       guild,
@@ -32,6 +33,7 @@ export class GuildsParamsService {
       voice,
       playlist,
       currentSong,
+      currentPlaying,
     });
   }
 

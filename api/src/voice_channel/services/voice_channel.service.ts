@@ -37,6 +37,7 @@ export class VoiceChannelService {
       voice,
       playlist: [],
       currentSong: 0,
+      currentPlaying: null,
     });
   }
 
@@ -60,14 +61,38 @@ export class VoiceChannelService {
     const stream = await player.stream(url, {
       discordPlayerCompatibility: true,
     });
-    const resource = createAudioResource(stream.stream);
-    guild.player.play(resource);
+    guild.currentPlaying = createAudioResource(stream.stream, {
+      inputType: stream.type,
+      inlineVolume: true,
+    });
+    guild.player.play(guild.currentPlaying);
+    this.guilds.set(guildId, guild);
     guild.player.on(AudioPlayerStatus.Idle, () => {
-      guild.playlist.shift();
-      if (guild.playlist.length > 0) {
+      if (guild.playlist.length > guild.currentSong + 1) {
+        guild.currentSong++;
         this.play(guildId);
       }
     });
+  }
+
+  async pause(guildId: string) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) throw new BadRequestException('Bot not in channel');
+    guild.player.pause();
+  }
+
+  async resume(guildId: string) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) throw new BadRequestException('Bot not in channel');
+    guild.player.unpause();
+  }
+
+  async stop(guildId: string) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) throw new BadRequestException('Bot not in channel');
+    guild.player.stop();
+    guild.currentPlaying = null;
+    guild.currentSong = 0;
   }
 
   async add(guildId: string, url: string) {
@@ -103,5 +128,23 @@ export class VoiceChannelService {
       this.play(guildId);
     }
     return guild.playlist[guild.currentSong];
+  }
+
+  async previous(guildId: string) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) throw new BadRequestException('Bot not in channel');
+    guild.player.stop();
+    if (guild.currentSong > 0) {
+      guild.currentSong--;
+      this.play(guildId);
+    }
+    return guild.playlist[guild.currentSong];
+  }
+
+  async volume(guildId: string, volume: number) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) throw new BadRequestException('Bot not in channel');
+    guild.currentPlaying.volume.setVolume(volume / 100);
+    return volume;
   }
 }

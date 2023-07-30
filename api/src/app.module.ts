@@ -8,12 +8,12 @@ import { VoiceChannelModule } from './voice_channel/voice_channel.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from './user/user.module';
 
 const configService = new ConfigService();
 
 @Module({
   imports: [
-    OauthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: '.env',
@@ -31,7 +31,6 @@ const configService = new ConfigService();
       ttl: 60, // seconds
       limit: 10, // requests
     }),
-    VoiceChannelModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: configService.get('DATABASE_URL'),
@@ -42,6 +41,9 @@ const configService = new ConfigService();
       secret: configService.get('JWT_SECRET'),
       signOptions: { expiresIn: '1d' },
     }),
+    UserModule,
+    VoiceChannelModule,
+    OauthModule,
   ],
   controllers: [],
   providers: [AppUpdate],
