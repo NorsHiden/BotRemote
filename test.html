@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discord Voice Channel</title>
+  </head>
+  <body>
+    <h1>Discord Voice Channel</h1>
+    <form>
+      <label for="guildId">Guild ID:</label>
+      <input type="text" id="guildId" name="guildId" /><br /><br />
+      <label for="channelId">Channel ID:</label>
+      <input type="text" id="channelId" name="channelId" /><br /><br />
+      <label for="url">URL:</label>
+      <input type="text" id="url" name="url" /><br /><br />
+      <button type="button" onclick="sendData('join')">Join</button>
+      <button type="button" onclick="sendData('leave')">Leave</button>
+      <button type="button" onclick="sendData('prev')">Prev</button>
+      <button type="button" onclick="sendData('play')">Play</button>
+      <button type="button" onclick="sendData('add')">Add</button>
+      <button type="button" onclick="sendData('pause')">Pause</button>
+      <button type="button" onclick="sendData('resume')">Resume</button>
+      <button type="button" onclick="sendData('stop')">Stop</button>
+      <button type="button" onclick="sendData('skip')">Skip</button>
+      <button type="button" onclick="sendData('playlist')">Playlist</button>
+    </form>
+    <div id="response"></div>
+    <script>
+      function sendData(action) {
+        const guildId = document.getElementById("guildId").value;
+        const channelId = document.getElementById("channelId").value;
+        const url = document.getElementById("url").value;
+        const data = { guildId, channelId, url };
+        fetch("http://localhost:3000/api/voice-channel/" + action, {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const responseDiv = document.getElementById("response");
+            responseDiv.innerHTML = JSON.stringify(data);
+          })
+          .catch((error) => console.error(error));
+      }
+    </script>
+  </body>
+</html>

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile, CallbackFunction } from 'passport-discord';
 import { ConfigService } from '@nestjs/config';
+import { user } from 'src/utils/types';
 
 @Injectable()
 export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
@@ -20,7 +21,12 @@ export class DiscordStrategy extends PassportStrategy(Strategy, 'discord') {
     profile: Profile,
     done: CallbackFunction,
   ) {
-    console.log(profile);
-    done(null, profile);
+    const user: user = {
+      id: profile.id,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      playlist: [],
+    };
+    done(null, user);
   }
 }

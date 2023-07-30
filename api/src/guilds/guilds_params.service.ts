@@ -11,6 +11,8 @@ export class GuildsParamsService {
       channel: Channel;
       player: AudioPlayer;
       voice: VoiceConnection;
+      playlist: { id: number; url: string; title: string }[];
+      currentSong: number;
     }
   > = new Map();
   constructor() {}
@@ -19,8 +21,18 @@ export class GuildsParamsService {
     return this.guilds.get(guildId);
   }
 
-  set(guildId: string, { guild, channel, player, voice }) {
-    this.guilds.set(guildId, { guild, channel, player, voice });
+  set(
+    guildId: string,
+    { guild, channel, player, voice, playlist, currentSong },
+  ) {
+    this.guilds.set(guildId, {
+      guild,
+      channel,
+      player,
+      voice,
+      playlist,
+      currentSong,
+    });
   }
 
   delete(guildId: string) {
