@@ -18,7 +18,11 @@ export class OauthController {
   @UseGuards(DiscordAuthGuard)
   async oauthRedirect(@Req() req, @Res() res) {
     const access_token = await this.OAuthService.signIn(req.user);
-    res.cookie('access_token', access_token);
+    res.cookie('access_token', access_token, {
+      MaxAge: 86400, // 1 day
+      sameSite: true,
+      secure: false,
+    });
     res.redirect(this.configService.get('CLIENT_URL'));
   }
 }

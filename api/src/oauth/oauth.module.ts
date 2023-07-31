@@ -24,11 +24,12 @@ const configService = new ConfigService();
   ],
   controllers: [OauthController],
   providers: [
-    OAuthService,
-    DiscordStrategy,
     DiscordAuthGuard,
+    DiscordStrategy,
     JwtAuthGuard,
     JwtStrategy,
+    OAuthService,
   ],
+  exports: [OAuthService],
 })
 export class OauthModule {}

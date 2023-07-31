@@ -12,4 +12,10 @@ export class UserController {
     const guilds = await this.userService.getGuilds(req.user.id);
     return guilds;
   }
+
+  @Get('common-guilds')
+  async getCommonGuilds(@Req() req) {
+    const guilds = await this.userService.getCommonGuilds(req.user.id);
+    return guilds;
+  }
 }
