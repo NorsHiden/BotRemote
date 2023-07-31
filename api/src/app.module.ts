@@ -9,7 +9,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
-
 const configService = new ConfigService();
 
 @Module({
@@ -36,10 +35,6 @@ const configService = new ConfigService();
       url: configService.get('DATABASE_URL'),
       autoLoadEntities: true,
       synchronize: true,
-    }),
-    JwtModule.register({
-      secret: configService.get('JWT_SECRET'),
-      signOptions: { expiresIn: '1d' },
     }),
     UserModule,
     VoiceChannelModule,

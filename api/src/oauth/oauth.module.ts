@@ -7,18 +7,26 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/typeorm/User';
 import { Playlist } from 'src/typeorm/Playlist';
 import { Song } from 'src/typeorm/Song';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+const configService = new ConfigService();
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Playlist, Song])],
+  imports: [
+    JwtModule.register({
+      secret: configService.get('JWT_SECRET'),
+      signOptions: { expiresIn: '1d' },
+    }),
+    TypeOrmModule.forFeature([User]),
+  ],
   controllers: [OauthController],
   providers: [
     OAuthService,
     DiscordStrategy,
     DiscordAuthGuard,
-    JwtService,
     JwtAuthGuard,
     JwtStrategy,
   ],

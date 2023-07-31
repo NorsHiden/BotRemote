@@ -4,3 +4,7 @@ export type user = {
   refresh_token: string;
   playlist: string[];
 };
+
+export type JwtPayload = {
+  sub: string;
+};
