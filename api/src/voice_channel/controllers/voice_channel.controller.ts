@@ -22,6 +22,21 @@ export class VoiceChannelController {
     };
   }
 
+  @Post('current-channel')
+  async currentChannel(@Body() body: { guildId: string }) {
+    const channelId = await this.voiceChannelService.currentChannel(
+      body.guildId,
+    );
+    return {
+      message: 'Current Channel',
+      statusCode: '200',
+      channelId: channelId,
+      data: {
+        guildId: body.guildId,
+      },
+    };
+  }
+
   @Post('leave')
   async leave(@Body() body: { guildId: string }) {
     await this.voiceChannelService.leave(body.guildId);
@@ -76,10 +91,10 @@ export class VoiceChannelController {
     return {
       message: 'Added to playlist',
       statusCode: '200',
+      song: song,
       data: {
         guildId: body.guildId,
         url: body.url,
-        song: song,
       },
     };
   }
@@ -90,9 +105,9 @@ export class VoiceChannelController {
     return {
       message: 'Playlist',
       statusCode: '200',
+      playlist: playlist,
       data: {
         guildId: body.guildId,
-        playlist: playlist,
       },
     };
   }

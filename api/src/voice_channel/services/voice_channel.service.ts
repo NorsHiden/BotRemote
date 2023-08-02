@@ -9,7 +9,7 @@ import {
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Client } from 'discord.js';
 import player from 'play-dl';
-import { GuildsParamsService } from 'src/guilds/guilds_params.service';
+import { GuildsParamsService } from 'src/guilds/services/guilds_params.service';
 
 @Injectable()
 export class VoiceChannelService {
@@ -39,6 +39,12 @@ export class VoiceChannelService {
       currentSong: 0,
       currentPlaying: null,
     });
+  }
+
+  async currentChannel(guildId: string) {
+    const guild = this.guilds.get(guildId);
+    if (!guild) return null;
+    return guild.channel.id;
   }
 
   async leave(guildId: string) {
@@ -108,6 +114,7 @@ export class VoiceChannelService {
       id: guild.playlist.length,
       url: info.video_details.url,
       title: info.video_details.title,
+      author: info.video_details.author,
     };
     guild.playlist.push(song);
     return song;
@@ -115,7 +122,7 @@ export class VoiceChannelService {
 
   async playlist(guildId: string) {
     const guild = this.guilds.get(guildId);
-    if (!guild) throw new BadRequestException('Bot not in channel');
+    if (!guild) return [];
     return guild.playlist;
   }
 

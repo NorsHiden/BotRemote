@@ -9,6 +9,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { UserModule } from './user/user.module';
+import { GuildsModule } from './guilds/guilds.module';
 const configService = new ConfigService();
 
 @Module({
@@ -39,6 +40,7 @@ const configService = new ConfigService();
     UserModule,
     VoiceChannelModule,
     OauthModule,
+    GuildsModule,
   ],
   controllers: [],
   providers: [AppUpdate],
