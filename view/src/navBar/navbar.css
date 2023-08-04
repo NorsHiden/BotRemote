@@ -1,42 +1,43 @@
 .navbar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #2F2F2F;
-    width: 100px;
-    height: 100%;
-    border-radius: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2f2f2f;
+  min-width: 100px;
+  height: 100%;
+  min-height: 280px;
+  border-radius: 15px;
 }
 
 .navbar-logo {
-    font-family: 'inter', sans-serif;
-    font-size: 42px;
-    padding-top: 25px;
-    padding-bottom: 45px;
-    color: #FFFFFF;
+  font-family: "inter", sans-serif;
+  font-size: 42px;
+  padding-top: 25px;
+  padding-bottom: 45px;
+  color: #ffffff;
 }
 
 .navbar-menu {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 25px;
 }
 
 .navbar-menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-    color: #FFFFFF;
-    height: 70px;
-    width: 70px;
-    background-color: #3C3C3C;
-    text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  color: #ffffff;
+  height: 70px;
+  width: 70px;
+  background-color: #3c3c3c;
+  text-decoration: none;
 }
 
 .navbar-menu-item:hover {
-    background-color: #4C4C4C;
+  filter: brightness(1.1);
 }
