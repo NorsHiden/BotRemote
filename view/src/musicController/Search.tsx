@@ -34,7 +34,13 @@ export const Search = () => {
           variant="Outline"
         />
       </div>
-      <div className="search-items">
+      <div className="search-items masked-overflow">
+        <SearchResultItem />
+        <SearchResultItem />
+        <SearchResultItem />
+        <SearchResultItem />
+        <SearchResultItem />
+        <SearchResultItem />
         <SearchResultItem />
         <SearchResultItem />
         <SearchResultItem />

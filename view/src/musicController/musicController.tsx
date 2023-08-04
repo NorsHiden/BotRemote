@@ -1,10 +1,7 @@
 import "./music_controller.css";
 import { ChannelsSelect } from "./channelSelect";
 import { Search } from "./Search";
-
-const MusicPlayer = () => {
-  return <div className="music-player">musicPlayer</div>;
-};
+import { MusicPlayer } from "./musicPlayer";
 
 export const MusicController = () => {
   return (
