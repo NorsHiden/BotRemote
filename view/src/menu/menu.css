@@ -19,7 +19,7 @@
 }
 
 .guild-select:hover {
-  filter: brightness(1.1);
+  background-color: #3f3f3f;
   cursor: pointer;
 }
 
@@ -44,6 +44,48 @@
   display: flex;
   margin-left: auto;
   margin-right: 15px;
+}
+
+.guild-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100px;
+  width: 30%;
+  background-color: #2f2f2f;
+  border-radius: 15px;
+  padding: 10px;
+  z-index: 1;
+}
+
+.guild-dropdown-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 15px;
+}
+
+.guild-dropdown-item:hover {
+  background-color: #3f3f3f;
+  cursor: pointer;
+}
+
+.guild-dropdown-item-image {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  background-color: #636363;
+  margin-left: 10px;
+}
+
+.guild-dropdown-item-name {
+  font-family: "inter", sans-serif;
+  font-size: 16px;
+  margin-left: 10px;
+  color: #636363;
 }
 
 /*** Menu ***/
