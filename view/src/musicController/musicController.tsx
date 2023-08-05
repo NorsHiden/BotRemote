@@ -7,17 +7,18 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export const MusicController = ({ currentGuild }: { currentGuild: Guild }) => {
-  // const [queue, setQueue] = useState<any>([]);
+  const [queue, setQueue] = useState<any>([]);
 
-  // useEffect(() => {
-  //   axios.get(`/api/voices/${currentGuild.id}/queue`).then((res) => {
-  //     setQueue(res.data);
-  //   });
-  // }, [queue]);
+  useEffect(() => {
+    if (!currentGuild) return;
+    axios.get(`/api/voices/${currentGuild.id}/queue`).then((res) => {
+      setQueue(res.data);
+    });
+  }, [currentGuild]);
   return (
     <div className="music-controller">
       <div className="player-search">
-        <MusicPlayer />
+        <MusicPlayer queue={queue} />
         <div className="channels-search">
           <ChannelsSelect currentGuild={currentGuild} />
           <Search currentGuild={currentGuild} />

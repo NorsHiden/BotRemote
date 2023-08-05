@@ -47,11 +47,11 @@ const MusicSection = () => {
   );
 };
 
-export const MusicPlayer = () => {
+export const MusicPlayer = ({ queue }: { queue: any[] }) => {
   return (
     <div className="music-player">
       <MusicSection />
-      <MusicQueue />
+      <MusicQueue queue={queue} />
     </div>
   );
 };
