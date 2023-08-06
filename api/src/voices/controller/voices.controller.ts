@@ -63,6 +63,16 @@ export class VoicesController {
     return await this.voicesservice.removeFromQueue(guildId, id);
   }
 
+  @Post(':guildId/play')
+  async play(@Param('guildId') guildId: string) {
+    return await this.voicesservice.play(guildId);
+  }
+
+  @Post(':guildId/pause')
+  async pause(@Param('guildId') guildId: string) {
+    return await this.voicesservice.pause(guildId);
+  }
+
   @Sse('event')
   sseEvent(): Observable<MessageEvent> {
     return interval(1000).pipe(map((_) => ({ data: { hello: 'world' } })));

@@ -42,6 +42,7 @@ export class VoiceServices {
     let connection = this.guilds.get(guildId);
     if (connection) connection.voice = voice;
     else connection = { voice: voice, player: createAudioPlayer() };
+    connection.voice.subscribe(connection.player);
     this.guilds.set(guildId, connection);
     return true;
   }
@@ -117,6 +118,45 @@ export class VoiceServices {
     const index = queue.indexOf(song);
     queue.splice(index, 1);
     this.queue.set(guildId, queue);
+    return true;
+  }
+
+  async play(guildId: string) {
+    const guild = this.client.guilds.cache.get(guildId);
+    if (!guild) throw new NotFoundException('Guild not found');
+    const connection = this.guilds.get(guildId);
+    if (!connection) throw new NotFoundException('Connection not found');
+    const queue = this.queue.get(guildId);
+    if (!queue) throw new NotFoundException('Queue not found');
+    if (queue.length === 0) throw new NotFoundException('Queue is empty');
+    const song = queue[0];
+    if (connection.player.state.status === 'paused')
+      return this.resume(guildId);
+    const stream = await player.stream(song.url);
+    const resource = createAudioResource(stream.stream, {
+      inputType: stream.type,
+    });
+    connection.player.play(resource);
+    song.isPlaying = true;
+    this.queue.set(guildId, queue);
+    return song;
+  }
+
+  async pause(guildId: string) {
+    const guild = this.client.guilds.cache.get(guildId);
+    if (!guild) throw new NotFoundException('Guild not found');
+    const connection = this.guilds.get(guildId);
+    if (!connection) throw new NotFoundException('Connection not found');
+    connection.player.pause();
+    return true;
+  }
+
+  async resume(guildId: string) {
+    const guild = this.client.guilds.cache.get(guildId);
+    if (!guild) throw new NotFoundException('Guild not found');
+    const connection = this.guilds.get(guildId);
+    if (!connection) throw new NotFoundException('Connection not found');
+    connection.player.unpause();
     return true;
   }
 }

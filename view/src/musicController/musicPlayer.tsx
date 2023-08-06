@@ -1,8 +1,35 @@
 import * as icons from "iconsax-react";
 import { MusicQueue } from "./musicQueue";
 import { Queue } from "../types";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Guild } from "discord.js";
 
-const MusicSection = () => {
+const MusicSection = ({ currentGuild }: { currentGuild: Guild }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isLooping, setIsLooping] = useState(false);
+
+  const PlaySong = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/play`).then(() => {
+      setIsPlaying(true);
+    });
+  };
+
+  const PauseSong = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/pause`).then(() => {
+      setIsPlaying(false);
+    });
+  };
+
+  useEffect(() => {
+    if (!currentGuild.id) return;
+    axios.get(`/api/voices/${currentGuild.id}/isPlaying`).then((res) => {
+      setIsPlaying(res.data);
+    });
+  }, []);
+
   return (
     <div className="music-section">
       <div className="music-info">
@@ -19,6 +46,7 @@ const MusicSection = () => {
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
+          onClick={() => console.log("shuffle")}
         />
         <icons.Previous
           className="music-section-control-icon"
@@ -26,12 +54,24 @@ const MusicSection = () => {
           color="#FFFFFF"
           variant="Bold"
         />
-        <icons.PlayCircle
-          className="music-section-control-icon"
-          size="32"
-          color="#FFFFFF"
-          variant="Bold"
-        />
+        {isPlaying ? (
+          <icons.PauseCircle
+            className="music-section-control-icon"
+            size="32"
+            color="#FFFFFF"
+            variant="Bold"
+            onClick={() => PauseSong()}
+          />
+        ) : (
+          <icons.PlayCircle
+            className="music-section-control-icon"
+            size="32"
+            color="#FFFFFF"
+            variant="Bold"
+            onClick={() => PlaySong()}
+          />
+        )}
+
         <icons.Next
           className="music-section-control-icon"
           size="32"
@@ -42,6 +82,7 @@ const MusicSection = () => {
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
+          variant={isLooping ? "Bold" : "Linear"}
         />
       </div>
     </div>
@@ -49,15 +90,17 @@ const MusicSection = () => {
 };
 
 export const MusicPlayer = ({
+  currentGuild,
   queue,
   removeSong,
 }: {
+  currentGuild: Guild;
   queue: Queue[];
   removeSong: Function;
 }) => {
   return (
     <div className="music-player">
-      <MusicSection />
+      <MusicSection currentGuild={currentGuild} />
       <MusicQueue queue={queue} removeSong={removeSong} />
     </div>
   );

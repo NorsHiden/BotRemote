@@ -48,7 +48,7 @@ export const ChannelsSelect = ({ currentGuild }: { currentGuild: Guild }) => {
   }, [selectedChannel]);
 
   useEffect(() => {
-    if (!currentGuild) return;
+    if (!currentGuild.id) return;
     axios.get(`/api/guilds/${currentGuild.id}/voices`).then((res) => {
       setChannels(res.data);
     });

@@ -12,12 +12,11 @@ export const MusicController = ({ currentGuild }: { currentGuild: Guild }) => {
 
   useEffect(() => {
     if (!currentGuild) return;
-    axios.get(`/api/voices/${currentGuild.id}/queue`).then((res) => {
-      setQueue(res.data);
-    });
+    updateQueue();
   }, [currentGuild]);
 
   const updateQueue = () => {
+    if (!currentGuild.id) return;
     axios.get(`/api/voices/${currentGuild.id}/queue`).then((res) => {
       setQueue(res.data);
     });
@@ -26,8 +25,7 @@ export const MusicController = ({ currentGuild }: { currentGuild: Guild }) => {
   const removeSong = (song: Queue) => {
     axios
       .delete(`/api/voices/${currentGuild.id}/queue?id=${song.id}`)
-      .then((res) => {
-        console.log(res.data);
+      .then(() => {
         updateQueue();
       });
   };
@@ -35,7 +33,11 @@ export const MusicController = ({ currentGuild }: { currentGuild: Guild }) => {
   return (
     <div className="music-controller">
       <div className="player-search">
-        <MusicPlayer queue={queue} removeSong={removeSong} />
+        <MusicPlayer
+          currentGuild={currentGuild}
+          queue={queue}
+          removeSong={removeSong}
+        />
         <div className="channels-search">
           <ChannelsSelect currentGuild={currentGuild} />
           <Search
