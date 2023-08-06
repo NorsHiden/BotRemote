@@ -20,7 +20,7 @@ const configService = new ConfigService();
       secret: configService.get('JWT_SECRET'),
       signOptions: { expiresIn: '1d' },
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Playlist, Song]),
   ],
   controllers: [OauthController],
   providers: [

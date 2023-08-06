@@ -4,12 +4,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NecordModule } from 'necord';
 import { IntentsBitField } from 'discord.js';
 import { AppUpdate } from './updates/app.update';
-import { VoiceChannelModule } from './voice_channel/voice_channel.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from '@nestjs/jwt';
-import { UserModule } from './user/user.module';
 import { GuildsModule } from './guilds/guilds.module';
+import { VoicesModule } from './voices/voices.module';
 const configService = new ConfigService();
 
 @Module({
@@ -37,10 +35,9 @@ const configService = new ConfigService();
       autoLoadEntities: true,
       synchronize: true,
     }),
-    UserModule,
-    VoiceChannelModule,
     OauthModule,
     GuildsModule,
+    VoicesModule,
   ],
   controllers: [],
   providers: [AppUpdate],

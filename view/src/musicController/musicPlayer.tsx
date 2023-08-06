@@ -1,5 +1,6 @@
 import * as icons from "iconsax-react";
 import { MusicQueue } from "./musicQueue";
+import { Queue } from "../types";
 
 const MusicSection = () => {
   return (
@@ -47,11 +48,17 @@ const MusicSection = () => {
   );
 };
 
-export const MusicPlayer = ({ queue }: { queue: any[] }) => {
+export const MusicPlayer = ({
+  queue,
+  removeSong,
+}: {
+  queue: Queue[];
+  removeSong: Function;
+}) => {
   return (
     <div className="music-player">
       <MusicSection />
-      <MusicQueue queue={queue} />
+      <MusicQueue queue={queue} removeSong={removeSong} />
     </div>
   );
 };

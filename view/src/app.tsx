@@ -8,15 +8,19 @@ import { Guild } from "discord.js";
 
 export const App = () => {
   const [guilds, setGuilds] = useState<Guild[]>([]);
-  const [currentGuild, setCurrentGuild] = useState<Guild>(undefined);
-
+  const [currentGuild, setCurrentGuild] = useState<Guild>({} as Guild);
   useEffect(() => {
-    axios.get("/api/guilds").then((res) => {
-      setGuilds(res.data);
-      const guildId = window.location.pathname.split("/")[1];
-      const guild = res.data.find((guild) => guild.id === guildId);
-      setCurrentGuild(guild);
-    });
+    axios
+      .get("/api/guilds")
+      .then((res) => {
+        setGuilds(res.data);
+        const guildId = window.location.pathname.split("/")[1];
+        const guild = res.data.find((guild) => guild.id === guildId);
+        setCurrentGuild(guild);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) window.location.href = "/login";
+      });
   }, []);
 
   return (

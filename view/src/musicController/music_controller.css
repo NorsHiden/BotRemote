@@ -154,23 +154,28 @@
   height: 50px;
   border-radius: 15px;
   background-color: #636363;
+  object-fit: cover;
 }
 
 .queue-song-text {
   display: flex;
   flex-direction: column;
   font-family: "inter", sans-serif;
+  width: 10vw;
 }
 
 .queue-song-title {
   color: #8d8d8d;
-  font-size: 16px;
+  font-size: 12px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   font-weight: 600;
 }
 
 .queue-song-author {
   color: #636363;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .queue-song-view {
@@ -189,6 +194,22 @@
   border-radius: 15px;
   font-family: "inter", sans-serif;
   gap: 10px;
+}
+
+.queue-song-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-left: auto;
+  margin-right: 25px;
+  /* background-color: #8b4343; */
+  border-radius: 50%;
+}
+
+.queue-song-remove:hover {
+  background-color: #3b3b3b;
 }
 
 .channels-search {
@@ -369,7 +390,7 @@
   align-items: center;
   width: 100%;
   height: calc(100vh - 350px);
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .search-items::-webkit-scrollbar {
@@ -412,11 +433,15 @@
   margin-left: 15px;
   font-family: "inter", sans-serif;
   gap: 5px;
+  width: 40vh;
 }
 
 .search-result-item-title {
   color: #c8c8c8;
-  font-size: 18px;
+  font-size: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .search-result-item-author {
@@ -427,4 +452,6 @@
 .search-result-item-add {
   margin-left: auto;
   margin-right: 15px;
+  min-height: 32px;
+  min-width: 32px;
 }

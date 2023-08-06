@@ -1,24 +1,28 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
-import { GuildsService } from '../services/guilds.service';
+import { GuildsService } from '../services/guilds.services';
 import { JwtAuthGuard } from 'src/oauth/guards/jwt.guard';
 
-@Controller('guild')
+@Controller('guilds')
 @UseGuards(JwtAuthGuard)
 export class GuildsController {
   constructor(private readonly guildsService: GuildsService) {}
+  @Get()
+  async getGuilds(@Req() req) {
+    return this.guildsService.getGuilds(req.user.id);
+  }
 
   @Get(':id')
-  async getGuilds(@Param('id') id: string) {
+  async getGuild(@Param('id') id: string) {
     return this.guildsService.getGuild(id);
   }
 
-  @Get(':id/allchannels')
-  async getChannels(@Param('id') id: string) {
-    return this.guildsService.getAllChannels(id);
+  @Get(':id/channels')
+  async getGuildChannels(@Param('id') guildId: string) {
+    return this.guildsService.getGuildChannels(guildId);
   }
 
-  @Get(':id/voice-channels')
-  async getVoiceChannels(@Param('id') id: string) {
-    return this.guildsService.getVoiceChannels(id);
+  @Get(':id/voices')
+  async getGuildVoices(@Param('id') guildId: string) {
+    return this.guildsService.getGuildVoices(guildId);
   }
 }

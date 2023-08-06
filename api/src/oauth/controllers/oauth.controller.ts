@@ -22,6 +22,7 @@ export class OauthController {
       MaxAge: 86400, // 1 day
       sameSite: true,
       secure: false,
+      HttpOnly: true,
     });
     res.redirect(this.configService.get('CLIENT_URL'));
   }
