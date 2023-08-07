@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { GuildsController } from './controllers/guilds.controller';
-import { GuildsService } from './services/guilds.services';
+import { GuildsService } from './services/guilds.service';
 
 @Module({
   imports: [],

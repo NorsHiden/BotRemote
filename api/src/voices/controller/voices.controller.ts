@@ -8,7 +8,7 @@ import {
   Query,
   Sse,
 } from '@nestjs/common';
-import { VoiceServices } from '../services/voices.services';
+import { VoiceServices } from '../services/voices.service';
 import { Observable, interval, map } from 'rxjs';
 
 type MessageEvent = {

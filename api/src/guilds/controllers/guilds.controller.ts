@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
-import { GuildsService } from '../services/guilds.services';
+import { GuildsService } from '../services/guilds.service';
 import { JwtAuthGuard } from 'src/oauth/guards/jwt.guard';
 
 @Controller('guilds')
