@@ -6,23 +6,12 @@ import { YouTubeVideo } from "play-dl";
 import * as icons from "iconsax-react";
 import { Queue } from "../types";
 
-const SearchResultItem = ({
-  result,
-  currentGuild,
-  queue,
-  updateQueue,
-}: {
-  result: YouTubeVideo;
-  currentGuild: Guild;
-  queue: Queue[];
-  updateQueue: Function;
-}) => {
+const SearchResultItem = ({ result, currentGuild, queue }) => {
   const [isAdded, setIsAdded] = useState<boolean>();
   const sendToQueue = (result: YouTubeVideo) => {
     axios
       .post(`/api/voices/${currentGuild.id}/queue?url=${result.url}`)
       .then((res) => {
-        updateQueue(res.data);
         setIsAdded(true);
       });
   };
@@ -58,15 +47,7 @@ const SearchResultItem = ({
   );
 };
 
-export const Search = ({
-  currentGuild,
-  queue,
-  updateQueue,
-}: {
-  currentGuild: Guild;
-  queue: Queue[];
-  updateQueue: Function;
-}) => {
+export const Search = ({ currentGuild, queue }) => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 300);
   const [searchResults, setSearchResults] = useState<YouTubeVideo[]>([]);
@@ -103,7 +84,6 @@ export const Search = ({
             result={result}
             currentGuild={currentGuild}
             queue={queue}
-            updateQueue={updateQueue}
           />
         ))}
       </div>

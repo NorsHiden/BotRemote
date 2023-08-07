@@ -1,10 +1,11 @@
 export type Queue = {
-  id: number;
   url: string;
-  thumbnail: string;
   title: string;
-  author: string;
-  duration: string;
-  player: string;
-  isPlaying: boolean;
+  views: number;
+  artist: string;
+  thumbnail: string;
+  duration: number;
+  requester: string;
+  seek: number;
+  state: "PLAYING" | "PAUSED" | "STOPPED";
 };

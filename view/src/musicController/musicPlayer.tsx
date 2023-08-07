@@ -5,40 +5,32 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Guild } from "discord.js";
 
-const MusicSection = ({ currentGuild }: { currentGuild: Guild }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLooping, setIsLooping] = useState(false);
-
+const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
   const PlaySong = () => {
     if (!currentGuild.id) return;
-    axios.post(`/api/voices/${currentGuild.id}/play`).then(() => {
-      setIsPlaying(true);
-    });
+    axios.post(`/api/voices/${currentGuild.id}/play`);
   };
 
   const PauseSong = () => {
     if (!currentGuild.id) return;
-    axios.post(`/api/voices/${currentGuild.id}/pause`).then(() => {
-      setIsPlaying(false);
-    });
+    axios.post(`/api/voices/${currentGuild.id}/pause`);
   };
-
-  useEffect(() => {
-    if (!currentGuild.id) return;
-    axios.get(`/api/voices/${currentGuild.id}/isPlaying`).then((res) => {
-      setIsPlaying(res.data);
-    });
-  }, []);
 
   return (
     <div className="music-section">
       <div className="music-info">
-        <div className="music-image"></div>
+        <img className="music-image" src={currentPlaying.thumbnail}></img>
         <div className="music-text">
-          <div className="music-title">Music Title</div>
-          <div className="music-author">Music Author</div>
-          <div className="music-3rd">123 456 789 views</div>
-          <div className="music-3rd">00:00</div>
+          <div className="music-title">
+            {currentPlaying.title ? currentPlaying.title : "Untitled"}
+          </div>
+          <div className="music-author">
+            {currentPlaying.artist ? currentPlaying.artist : "Untitled"}
+          </div>
+          <div className="music-3rd">0 view</div>
+          <div className="music-3rd">
+            {currentPlaying.duration ? currentPlaying.duration : "00:00"}
+          </div>
         </div>
       </div>
       <div className="music-section-control">
@@ -54,7 +46,7 @@ const MusicSection = ({ currentGuild }: { currentGuild: Guild }) => {
           color="#FFFFFF"
           variant="Bold"
         />
-        {isPlaying ? (
+        {currentPlaying.state == "Playing" ? (
           <icons.PauseCircle
             className="music-section-control-icon"
             size="32"
@@ -82,26 +74,38 @@ const MusicSection = ({ currentGuild }: { currentGuild: Guild }) => {
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
-          variant={isLooping ? "Bold" : "Linear"}
+          variant={isLoopingState.isLooping ? "Bold" : "Linear"}
         />
       </div>
     </div>
   );
 };
 
-export const MusicPlayer = ({
-  currentGuild,
-  queue,
-  removeSong,
-}: {
-  currentGuild: Guild;
-  queue: Queue[];
-  removeSong: Function;
-}) => {
+export const MusicPlayer = ({ currentGuild, queueState }) => {
+  const [currentPlaying, setCurrentPlaying] = useState<Queue>({} as Queue);
+  const [isLooping, setIsLooping] = useState<boolean>(false);
+  useEffect(() => {
+    if (!currentGuild.id) return;
+    const updates = new EventSource(`/api/voices/${currentGuild.id}/updates`, {
+      withCredentials: true,
+    });
+    updates.onmessage = (event) => {
+      const update = event.data ? JSON.parse(event.data) : "null";
+      if (update === "null") return;
+      queueState.setQueue(update.queue ? update.queue : []);
+      setCurrentPlaying(update.currentPlaying);
+      setIsLooping(update.isLooping);
+    };
+  }, [currentGuild]);
+
   return (
     <div className="music-player">
-      <MusicSection currentGuild={currentGuild} />
-      <MusicQueue queue={queue} removeSong={removeSong} />
+      <MusicSection
+        currentGuild={currentGuild}
+        currentPlaying={currentPlaying}
+        isLoopingState={{ isLooping, setIsLooping }}
+      />
+      <MusicQueue currentGuild={currentGuild} queue={queueState.queue} />
     </div>
   );
 };

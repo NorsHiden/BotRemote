@@ -1,18 +1,14 @@
 import * as icons from "iconsax-react";
 import { Queue } from "../types";
+import axios from "axios";
+const MusicQueueSong = ({ currentGuild, song, songId }) => {
+  const removeSong = (songId: number) => {
+    axios.delete(`/api/voices/${currentGuild.id}/queue?index=${songId}`);
+  };
 
-const MusicQueueSong = ({
-  song,
-  songId,
-  removeSong,
-}: {
-  song: Queue;
-  songId: number;
-  removeSong: Function;
-}) => {
   return (
     <div className="queue-song">
-      <div className="queue-num">{songId}</div>
+      <div className="queue-num">{songId + 1}</div>
       <img className="queue-song-image" src={song.thumbnail}></img>
       <div className="queue-song-text">
         <div className="queue-song-title">{song.title}</div>
@@ -22,28 +18,27 @@ const MusicQueueSong = ({
         <icons.Clock size="16" color="#636363" />
         <p>{song.duration}</p>
       </div>
-      <button className="queue-song-remove" onClick={() => removeSong(song)}>
+      <button
+        className="queue-song-remove"
+        onClick={() => {
+          removeSong(songId);
+        }}
+      >
         <icons.Trash size="20" color="#636363" />
       </button>
     </div>
   );
 };
 
-export const MusicQueue = ({
-  queue,
-  removeSong,
-}: {
-  queue: Queue[];
-  removeSong: Function;
-}) => {
+export const MusicQueue = ({ currentGuild, queue }) => {
   return (
     <div className="music-queue">
       {queue.map((song: Queue, index: number) => (
         <MusicQueueSong
           key={index}
+          currentGuild={currentGuild}
           song={song}
           songId={index}
-          removeSong={removeSong}
         />
       ))}
     </div>
