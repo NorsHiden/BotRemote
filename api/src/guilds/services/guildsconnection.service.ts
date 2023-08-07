@@ -7,8 +7,10 @@ export type Song = {
   views: number;
   artist: string;
   thumbnail: string;
-  duration: number;
+  duration_sec: number;
+  duration: string;
   requester: string;
+  seek: number;
   state: 'PLAYING' | 'PAUSED' | 'STOPPED';
 };
 
@@ -33,10 +35,12 @@ export const createGuildConnection = (id: string): GuildConnection =>
 
 @Injectable()
 export class GuildsConnectionService {
-  private readonly guilds: Map<string, GuildConnection>;
+  private readonly guilds: Map<string, GuildConnection> = new Map();
 
-  constructor() {
-    this.guilds = new Map<string, GuildConnection>();
+  constructor() {}
+
+  get all(): Map<string, GuildConnection> {
+    return this.guilds;
   }
 
   get(id: string): GuildConnection | undefined {

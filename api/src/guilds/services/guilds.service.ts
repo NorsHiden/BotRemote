@@ -19,13 +19,14 @@ export class GuildsService {
     private readonly guilds: GuildsConnectionService,
   ) {}
 
-  async onModuleInit(): Promise<void> {
+  async onApplicationBootstrap(): Promise<void> {
     this.client.guilds.cache.forEach(async (guild) => {
       this.guilds.set(
         guild.id,
         createGuildConnection(guild.id) as GuildConnection,
       );
     });
+
     this.client.on('guildCreate', async (guild) => {
       this.guilds.set(
         guild.id,
