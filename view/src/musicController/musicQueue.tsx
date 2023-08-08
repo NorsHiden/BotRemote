@@ -5,10 +5,23 @@ const MusicQueueSong = ({ currentGuild, song, songId }) => {
   const removeSong = (songId: number) => {
     axios.delete(`/api/voices/${currentGuild.id}/queue?index=${songId}`);
   };
+  let songState = null;
+  if (song.state === "PLAYING")
+    songState = <icons.Sound className="queue-num" size="28" color="#636363" />;
+  else if (song.state === "PAUSED")
+    songState = (
+      <icons.Pause
+        className="queue-num"
+        size="20"
+        color="#636363"
+        variant="Bold"
+      />
+    );
+  else songState = <div className="queue-num">{songId + 1}</div>;
 
   return (
     <div className="queue-song">
-      <div className="queue-num">{songId + 1}</div>
+      {songState}
       <img className="queue-song-image" src={song.thumbnail}></img>
       <div className="queue-song-text">
         <div className="queue-song-title">{song.title}</div>

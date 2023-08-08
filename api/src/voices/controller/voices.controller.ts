@@ -101,6 +101,11 @@ export class VoicesController {
     return await this.playerService.skip(guildId);
   }
 
+  @Post(':guildId/previous')
+  async previous(@Param('guildId') guildId: string) {
+    return await this.playerService.previous(guildId);
+  }
+
   @Post(':guildId/loop')
   async loop(@Param('guildId') guildId: string) {
     return await this.playerService.loop(guildId);

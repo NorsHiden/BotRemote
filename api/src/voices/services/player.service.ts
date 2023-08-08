@@ -90,13 +90,13 @@ export class PlayerService {
     const guild = this.guilds.get(guildId);
     if (!guild) throw new NotFoundException('Guild not found');
     if (!guild.queue.length) throw new NotFoundException('Queue is empty');
-    if (guild.player.state.status === 'paused') {
+    if (guild.queue[guild.selectedSong].state === 'PAUSED') {
       guild.player.unpause();
       guild.queue[guild.selectedSong].state = 'PLAYING';
       this.guilds.set(guildId, guild);
       return guild.queue[guild.selectedSong];
     }
-    const stream = await player.stream(guild.queue[0].url, {
+    const stream = await player.stream(guild.queue[guild.selectedSong].url, {
       discordPlayerCompatibility: true,
       quality: 3,
     });
@@ -105,17 +105,17 @@ export class PlayerService {
       inlineVolume: true,
     });
     guild.player.play(resource);
-    guild.queue[guild.selectedSong].state = 'PLAYING';
+    if (guild.queue[guild.selectedSong])
+      guild.queue[guild.selectedSong].state = 'PLAYING';
+    else {
+      console.log(guild.queue, guild.selectedSong);
+    }
     this.guilds.set(guildId, guild);
     guild.player.on('error', (error) => {
       console.error(error);
     });
     guild.player.on('stateChange', (oldState, newState) => {
-      if (newState.status === 'idle') {
-        guild.queue[guild.selectedSong].state = 'STOPPED';
-        if (guild.selectedSong === guild.queue.length - 1) guild.selectedSong++;
-        else if (guild.isLooping) guild.selectedSong = 0;
-      }
+      if (newState.status === 'idle') this.skip(guildId);
     });
   }
 
@@ -143,9 +143,8 @@ export class PlayerService {
     const guild = this.guilds.get(guildId);
     if (!guild) throw new NotFoundException('Guild not found');
     if (!guild.queue.length) throw new NotFoundException('Queue is empty');
-    guild.player.stop();
     guild.queue[guild.selectedSong].state = 'STOPPED';
-    if (guild.selectedSong === guild.queue.length - 1) guild.selectedSong++;
+    if (guild.selectedSong < guild.queue.length - 1) guild.selectedSong++;
     else if (guild.isLooping) guild.selectedSong = 0;
     this.guilds.set(guildId, guild);
     return this.play(guildId);
@@ -155,7 +154,6 @@ export class PlayerService {
     const guild = this.guilds.get(guildId);
     if (!guild) throw new NotFoundException('Guild not found');
     if (!guild.queue.length) throw new NotFoundException('Queue is empty');
-    guild.player.stop();
     guild.queue[guild.selectedSong].state = 'STOPPED';
     if (guild.selectedSong > 0) guild.selectedSong--;
     this.guilds.set(guildId, guild);
@@ -176,6 +174,10 @@ export class PlayerService {
     if (!guild) throw new NotFoundException('Guild not found');
     if (!guild.queue.length) throw new NotFoundException('Queue is empty');
     guild.queue = guild.queue.sort(() => Math.random() - 0.5);
+    guild.selectedSong = guild.queue.findIndex(
+      (song) => song.state === 'PLAYING',
+    );
+    if (guild.selectedSong === -1) guild.selectedSong = 0;
     this.guilds.set(guildId, guild);
     return guild.queue;
   }
@@ -196,9 +198,11 @@ export class PlayerService {
     if (!guild) throw new NotFoundException('Guild not found');
     return {
       currentPlaying:
-        guild.queue.length > 0 ? guild.queue[guild.selectedSong] : ({} as Song),
+        guild.selectedSong < guild.queue.length
+          ? guild.queue[guild.selectedSong]
+          : ({} as Song),
       isLooping: guild.isLooping,
-      queue: guild.queue,
+      queue: guild.queue ? guild.queue : [],
     };
   }
 }

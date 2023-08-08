@@ -16,10 +16,34 @@ const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
     axios.post(`/api/voices/${currentGuild.id}/pause`);
   };
 
+  const NextSong = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/skip`);
+  };
+
+  const PreviousSong = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/previous`);
+  };
+
+  const ShuffleSongs = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/shuffle`);
+  };
+
+  const LoopSongs = () => {
+    if (!currentGuild.id) return;
+    axios.post(`/api/voices/${currentGuild.id}/loop`);
+  };
+
   return (
     <div className="music-section">
       <div className="music-info">
-        <img className="music-image" src={currentPlaying.thumbnail}></img>
+        {currentPlaying.thumbnail ? (
+          <img className="music-image" src={currentPlaying.thumbnail}></img>
+        ) : (
+          <div className="music-image"></div>
+        )}
         <div className="music-text">
           <div className="music-title">
             {currentPlaying.title ? currentPlaying.title : "Untitled"}
@@ -38,15 +62,16 @@ const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
-          onClick={() => console.log("shuffle")}
+          onClick={() => ShuffleSongs()}
         />
         <icons.Previous
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
           variant="Bold"
+          onClick={() => PreviousSong()}
         />
-        {currentPlaying.state == "Playing" ? (
+        {currentPlaying.state == "PLAYING" ? (
           <icons.PauseCircle
             className="music-section-control-icon"
             size="32"
@@ -69,12 +94,14 @@ const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
           size="32"
           color="#FFFFFF"
           variant="Bold"
+          onClick={() => NextSong()}
         />
         <icons.RepeateMusic
           className="music-section-control-icon"
           size="32"
           color="#FFFFFF"
           variant={isLoopingState.isLooping ? "Bold" : "Linear"}
+          onClick={() => LoopSongs()}
         />
       </div>
     </div>

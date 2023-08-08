@@ -15,6 +15,24 @@ export class VoiceServices {
     private readonly guilds: GuildsConnectionService,
   ) {}
 
+  async onApplicationBootstrap(): Promise<void> {
+    this.client.guilds.cache.forEach(async (guild) => {
+      this.guilds.set(
+        guild.id,
+        createGuildConnection(guild.id) as GuildConnection,
+      );
+    });
+    this.client.on('guildCreate', async (guild) => {
+      this.guilds.set(
+        guild.id,
+        createGuildConnection(guild.id) as GuildConnection,
+      );
+    });
+    this.client.on('guildDelete', async (guild) => {
+      this.guilds.delete(guild.id);
+    });
+  }
+
   async joinVoice(guildId: string, channelId: string): Promise<string> {
     const guild = await this.client.guilds.cache.get(guildId);
     if (!guild) throw new NotFoundException('Guild not found');
@@ -25,13 +43,10 @@ export class VoiceServices {
       guildId: guild.id,
       adapterCreator: guild.voiceAdapterCreator,
     });
-    this.guilds.set(guildId, {
-      id: guildId,
-      voice: connection,
-      player: createAudioPlayer(),
-      queue: [],
-    } as GuildConnection);
-    connection.subscribe(this.guilds.get(guildId).player);
+    const localGuild = this.guilds.get(guildId);
+    localGuild.voice = connection;
+    connection.subscribe(localGuild.player);
+    this.guilds.set(guildId, localGuild);
     return 'Joined voice channel';
   }
 

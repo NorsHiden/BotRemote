@@ -1,4 +1,8 @@
-import { AudioPlayer, VoiceConnection } from '@discordjs/voice';
+import {
+  AudioPlayer,
+  VoiceConnection,
+  createAudioPlayer,
+} from '@discordjs/voice';
 import { Injectable } from '@nestjs/common';
 
 export type Song = {
@@ -28,7 +32,7 @@ export const createGuildConnection = (id: string): GuildConnection =>
     id: id,
     selectedSong: 0,
     voice: null,
-    player: null,
+    player: createAudioPlayer(),
     queue: [],
     isLooping: false,
   } as GuildConnection);
