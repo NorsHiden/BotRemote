@@ -22,6 +22,14 @@ export class PlayerService {
         guild.id,
         createGuildConnection(guild.id) as GuildConnection,
       );
+      this.guilds.get(guild.id).player.on('error', (error) => {
+        console.error(error);
+      });
+      this.guilds
+        .get(guild.id)
+        .player.on('stateChange', (oldState, newState) => {
+          if (newState.status === 'idle') this.skip(guild.id);
+        });
     });
 
     this.client.on('guildCreate', async (guild) => {
@@ -29,6 +37,14 @@ export class PlayerService {
         guild.id,
         createGuildConnection(guild.id) as GuildConnection,
       );
+      this.guilds.get(guild.id).player.on('error', (error) => {
+        console.error(error);
+      });
+      this.guilds
+        .get(guild.id)
+        .player.on('stateChange', (oldState, newState) => {
+          if (newState.status === 'idle') this.skip(guild.id);
+        });
     });
     this.client.on('guildDelete', async (guild) => {
       this.guilds.delete(guild.id);
@@ -111,12 +127,6 @@ export class PlayerService {
       console.log(guild.queue, guild.selectedSong);
     }
     this.guilds.set(guildId, guild);
-    guild.player.on('error', (error) => {
-      console.error(error);
-    });
-    guild.player.on('stateChange', (oldState, newState) => {
-      if (newState.status === 'idle') this.skip(guildId);
-    });
   }
 
   async pause(guildId: string): Promise<Song> {
