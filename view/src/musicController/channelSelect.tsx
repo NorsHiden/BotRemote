@@ -1,9 +1,22 @@
 import axios from "axios";
-import { Channel, Guild } from "discord.js";
 import * as icons from "iconsax-react";
 import { useEffect, useState } from "react";
+import { Guild } from "../types";
 
-const ChannelItem = ({ channel, sets }) => {
+interface Channel {
+  id: string;
+  name: string;
+}
+
+interface ChannelItemProps {
+  channel: Channel;
+  sets: {
+    setSelectedChannel: (channel: Channel) => void;
+    setIsOpen: (isOpen: boolean) => void;
+  };
+}
+
+const ChannelItem = ({ channel, sets }: ChannelItemProps) => {
   const onTriggered = () => {
     sets.setSelectedChannel(channel);
     sets.setIsOpen(false);
@@ -21,7 +34,9 @@ const ChannelItem = ({ channel, sets }) => {
 
 export const ChannelsSelect = ({ currentGuild }: { currentGuild: Guild }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [selectedChannel, setSelectedChannel] = useState<Channel>(
+    {} as Channel
+  );
   const [channels, setChannels] = useState<Channel[]>([]);
   const [isJoined, setIsJoined] = useState(false);
 
@@ -45,7 +60,7 @@ export const ChannelsSelect = ({ currentGuild }: { currentGuild: Guild }) => {
     axios.get(`/api/voices/${currentGuild.id}/current-voice`).then((res) => {
       setIsJoined(res.data.channelId === selectedChannel.id);
     });
-  }, [selectedChannel]);
+  }, [selectedChannel, currentGuild]);
 
   useEffect(() => {
     if (!currentGuild.id) return;

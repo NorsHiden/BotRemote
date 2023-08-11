@@ -1,17 +1,26 @@
 import axios from "axios";
-import { Guild } from "discord.js";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { YouTubeVideo } from "play-dl";
 import * as icons from "iconsax-react";
-import { Queue } from "../types";
+import { Guild, Queue } from "../types";
 
-const SearchResultItem = ({ result, currentGuild, queue }) => {
+interface SearchResultItemProps {
+  result: YouTubeVideo;
+  currentGuild: Guild;
+  queue: Queue[];
+}
+
+const SearchResultItem = ({
+  result,
+  currentGuild,
+  queue,
+}: SearchResultItemProps) => {
   const [isAdded, setIsAdded] = useState<boolean>();
   const sendToQueue = (result: YouTubeVideo) => {
     axios
       .post(`/api/voices/${currentGuild.id}/queue?url=${result.url}`)
-      .then((res) => {
+      .then(() => {
         setIsAdded(true);
       });
   };
@@ -20,10 +29,14 @@ const SearchResultItem = ({ result, currentGuild, queue }) => {
     const song = queue.find((item) => item.url === result.url);
     if (song) setIsAdded(true);
     else setIsAdded(false);
-  }, [currentGuild]);
+  }, [result, currentGuild, queue]);
+
   return (
     <button className="search-result-item" onClick={() => sendToQueue(result)}>
-      <img className="search-result-item-picture" src={result.thumbnail.url} />
+      <img
+        className="search-result-item-picture"
+        src={result.thumbnails[0].url}
+      />
       <div className="search-result-item-info">
         <div className="search-result-item-title">{result.title}</div>
         <div className="search-result-item-author">{result.channel?.name}</div>
@@ -47,7 +60,12 @@ const SearchResultItem = ({ result, currentGuild, queue }) => {
   );
 };
 
-export const Search = ({ currentGuild, queue }) => {
+interface SearchProps {
+  currentGuild: Guild;
+  queue: Queue[];
+}
+
+export const Search = ({ currentGuild, queue }: SearchProps) => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 300);
   const [searchResults, setSearchResults] = useState<YouTubeVideo[]>([]);

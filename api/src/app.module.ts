@@ -9,6 +9,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { GuildsModule } from './guilds/guilds.module';
 import { VoicesModule } from './voices/voices.module';
 import { UserModule } from './user/user.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 const configService = new ConfigService();
 
 @Module({
@@ -40,6 +42,9 @@ const configService = new ConfigService();
     UserModule,
     GuildsModule,
     VoicesModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '../view/dist'),
+    }),
   ],
   controllers: [],
   providers: [AppUpdate],

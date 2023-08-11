@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import "./menu.css";
 import * as icons from "iconsax-react";
-import { Guild, User } from "discord.js";
+import { User } from "discord.js";
 import axios from "axios";
+import { Guild } from "../types";
 
-const GuildItem = ({ id, img, name }) => {
+interface GuildItemProps {
+  id: string;
+  img: string | undefined;
+  name: string;
+}
+
+const GuildItem = ({ id, img, name }: GuildItemProps) => {
   return (
     <a className="guild-dropdown-item" href={id}>
       <img className="guild-dropdown-item-image" src={img}></img>
@@ -13,14 +20,14 @@ const GuildItem = ({ id, img, name }) => {
   );
 };
 
-const GuildDropdown = ({ guilds }) => {
+const GuildDropdown = ({ guilds }: {guilds: Guild[]}) => {
   return (
     <div className="guild-dropdown">
       {guilds.map((guild) => (
         <GuildItem
           key={guild.id}
           id={guild.id}
-          img={guild.iconURL}
+          img={guild.iconURL || ""}
           name={guild.name}
         />
       ))}
@@ -44,7 +51,7 @@ const GuildSection = ({
     <>
       <button className="guild-select" onClick={dropDownHandler}>
         {currentGuild ? (
-          <img className="guild-picture" src={currentGuild.iconURL}></img>
+          <img className="guild-picture" src={currentGuild.iconURL|| ""}></img>
         ) : (
           <div className="guild-picture"></div>
         )}
@@ -62,7 +69,12 @@ const GuildSection = ({
   );
 };
 
-export const Menu = ({ guilds, currentGuild }) => {
+interface MenuProps {
+  guilds: Guild[];
+  currentGuild: Guild;
+}
+
+export const Menu = ({ guilds, currentGuild }: MenuProps) => {
   const [profile, setProfile] = useState<User>({} as User);
 
   useEffect(() => {

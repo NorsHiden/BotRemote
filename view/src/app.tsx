@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import { MusicController } from "./musicController/musicController";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Guild } from "discord.js";
+import { Guild } from "./types";
 
 export const App = () => {
   const [guilds, setGuilds] = useState<Guild[]>([]);
@@ -15,7 +15,7 @@ export const App = () => {
       .then((res) => {
         setGuilds(res.data);
         const guildId = window.location.pathname.split("/")[1];
-        const guild = res.data.find((guild) => guild.id === guildId);
+        const guild = res.data.find((guild: Guild) => guild.id === guildId);
         setCurrentGuild(guild);
       })
       .catch((error) => {

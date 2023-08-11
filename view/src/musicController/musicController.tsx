@@ -2,9 +2,8 @@ import "./music_controller.css";
 import { ChannelsSelect } from "./channelSelect";
 import { Search } from "./Search";
 import { MusicPlayer } from "./musicPlayer";
-import { Guild } from "discord.js";
 import { useState } from "react";
-import { Queue } from "../types";
+import { Guild, Queue } from "../types";
 
 export const MusicController = ({ currentGuild }: { currentGuild: Guild }) => {
   const [queue, setQueue] = useState<Queue[]>([]);

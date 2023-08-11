@@ -3,9 +3,22 @@ import { MusicQueue } from "./musicQueue";
 import { Queue } from "../types";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Guild } from "discord.js";
+import { Guild } from "../types";
 
-const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
+interface MusicPlayerProps {
+  currentGuild: Guild;
+  currentPlaying: Queue;
+  isLoopingState: {
+    isLooping: boolean;
+    setIsLooping: React.Dispatch<React.SetStateAction<boolean>>;
+  };
+}
+
+const MusicSection = ({
+  currentGuild,
+  currentPlaying,
+  isLoopingState,
+}: MusicPlayerProps) => {
   const PlaySong = () => {
     if (!currentGuild.id) return;
     axios.post(`/api/voices/${currentGuild.id}/play`);
@@ -108,7 +121,15 @@ const MusicSection = ({ currentGuild, currentPlaying, isLoopingState }) => {
   );
 };
 
-export const MusicPlayer = ({ currentGuild, queueState }) => {
+interface MusicQueueProps {
+  currentGuild: Guild;
+  queueState: {
+    queue: Queue[];
+    setQueue: React.Dispatch<React.SetStateAction<Queue[]>>;
+  };
+}
+
+export const MusicPlayer = ({ currentGuild, queueState }: MusicQueueProps) => {
   const [currentPlaying, setCurrentPlaying] = useState<Queue>({} as Queue);
   const [isLooping, setIsLooping] = useState<boolean>(false);
   useEffect(() => {
@@ -123,7 +144,7 @@ export const MusicPlayer = ({ currentGuild, queueState }) => {
       setCurrentPlaying(update.currentPlaying);
       setIsLooping(update.isLooping);
     };
-  }, [currentGuild]);
+  }, [currentGuild, queueState]);
 
   return (
     <div className="music-player">

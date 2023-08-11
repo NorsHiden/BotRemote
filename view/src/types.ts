@@ -9,3 +9,9 @@ export type Queue = {
   seek: number;
   state: "PLAYING" | "PAUSED" | "STOPPED";
 };
+
+export type Guild = {
+  id: string;
+  name: string;
+  iconURL: string;
+};
