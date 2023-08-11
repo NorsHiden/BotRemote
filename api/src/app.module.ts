@@ -8,6 +8,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GuildsModule } from './guilds/guilds.module';
 import { VoicesModule } from './voices/voices.module';
+import { UserModule } from './user/user.module';
 const configService = new ConfigService();
 
 @Module({
@@ -36,6 +37,7 @@ const configService = new ConfigService();
       synchronize: true,
     }),
     OauthModule,
+    UserModule,
     GuildsModule,
     VoicesModule,
   ],

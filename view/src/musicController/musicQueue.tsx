@@ -1,6 +1,7 @@
 import * as icons from "iconsax-react";
 import { Queue } from "../types";
 import axios from "axios";
+
 const MusicQueueSong = ({ currentGuild, song, songId }) => {
   const removeSong = (songId: number) => {
     axios.delete(`/api/voices/${currentGuild.id}/queue?index=${songId}`);
@@ -20,7 +21,13 @@ const MusicQueueSong = ({ currentGuild, song, songId }) => {
   else songState = <div className="queue-num">{songId + 1}</div>;
 
   return (
-    <div className="queue-song">
+    <div
+      className={
+        song.state === "PLAYING" || song.state === "PAUSED"
+          ? "queue-selected-song"
+          : "queue-song"
+      }
+    >
       {songState}
       <img className="queue-song-image" src={song.thumbnail}></img>
       <div className="queue-song-text">

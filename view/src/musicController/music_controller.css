@@ -128,6 +128,17 @@
   border-radius: 15px;
 }
 
+.queue-selected-song {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 90%;
+  min-height: 70px;
+  background-color: #3b3b3b;
+  border-radius: 15px;
+  gap: 15px;
+}
+
 .queue-song {
   display: flex;
   flex-direction: row;
@@ -207,12 +218,12 @@
   height: 30px;
   margin-left: auto;
   margin-right: 25px;
-  /* background-color: #8b4343; */
   border-radius: 50%;
 }
 
 .queue-song-remove:hover {
   background-color: #3b3b3b;
+  cursor: pointer;
 }
 
 .channels-search {

@@ -28,7 +28,12 @@ export class PlayerService {
       this.guilds
         .get(guild.id)
         .player.on('stateChange', (oldState, newState) => {
-          if (newState.status === 'idle') this.skip(guild.id);
+          const currentGuild = this.guilds.get(guild.id);
+          if (
+            newState.status === 'idle' &&
+            currentGuild.queue[currentGuild.selectedSong].state == 'PLAYING'
+          )
+            this.skip(guild.id);
         });
     });
 
@@ -43,7 +48,12 @@ export class PlayerService {
       this.guilds
         .get(guild.id)
         .player.on('stateChange', (oldState, newState) => {
-          if (newState.status === 'idle') this.skip(guild.id);
+          const currentGuild = this.guilds.get(guild.id);
+          if (
+            newState.status === 'idle' &&
+            currentGuild.queue[currentGuild.selectedSong].state == 'PLAYING'
+          )
+            this.skip(guild.id);
         });
     });
     this.client.on('guildDelete', async (guild) => {
@@ -81,6 +91,10 @@ export class PlayerService {
     if (!guild) throw new NotFoundException('Guild not found');
     if (!guild.queue.length) throw new NotFoundException('Queue is empty');
     const song = guild.queue[index];
+    if (!song) throw new NotFoundException('Song not found');
+    if (song.state === 'PLAYING' || song.state === 'PAUSED')
+      await this.stop(guildId);
+    if (guild.queue.length == 2) guild.selectedSong = 0;
     guild.queue.splice(index, 1);
     this.guilds.set(guildId, guild);
     return song;

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import "./menu.css";
 import * as icons from "iconsax-react";
-import { Guild } from "discord.js";
+import { Guild, User } from "discord.js";
+import axios from "axios";
 
 const GuildItem = ({ id, img, name }) => {
   return (
@@ -62,12 +63,36 @@ const GuildSection = ({
 };
 
 export const Menu = ({ guilds, currentGuild }) => {
+  const [profile, setProfile] = useState<User>({} as User);
+
+  useEffect(() => {
+    axios
+      .get("/api/user/@me")
+      .then((res) => {
+        console.log(res.data);
+        setProfile(res.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) window.location.href = "/login";
+      });
+  }, [currentGuild]);
+
   return (
     <div className="menu">
       <GuildSection guilds={guilds} currentGuild={currentGuild} />
       <div className="menu-section">
         <div className="user-profile">
-          <div className="user-picture"></div>
+          <a className="logout-btn" href="/api/oauth/logout">
+            Logout
+          </a>
+          {profile.username ? (
+            <img
+              className="user-picture"
+              src={`https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}`}
+            ></img>
+          ) : (
+            <div className="user-picture"></div>
+          )}
         </div>
       </div>
     </div>

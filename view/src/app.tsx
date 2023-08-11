@@ -29,12 +29,16 @@ export const App = () => {
         <NavBar />
         <div className="wrapper">
           <Menu guilds={guilds} currentGuild={currentGuild} />
-          <Routes>
-            <Route
-              path="/:id"
-              element={<MusicController currentGuild={currentGuild} />}
-            />
-          </Routes>
+          {currentGuild ? (
+            <Routes>
+              <Route
+                path="/:id"
+                element={<MusicController currentGuild={currentGuild} />}
+              />
+            </Routes>
+          ) : (
+            <div className="no-guild">No guild has been selected</div>
+          )}
         </div>
       </div>
     </div>
