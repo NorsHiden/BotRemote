@@ -6,7 +6,7 @@ import {
   GuildsConnectionService,
   createGuildConnection,
 } from 'src/guilds/services/guildsconnection.service';
-import player, { YouTubeVideo } from 'play-dl';
+import player, { YouTubePlayList } from 'play-dl';
 
 @Injectable()
 export class VoiceServices {
@@ -68,7 +68,7 @@ export class VoiceServices {
     return guild.voice.joinConfig.channelId;
   }
 
-  async searchYoutube(query: string): Promise<YouTubeVideo[]> {
+  async searchYoutube(query: string): Promise<YouTubePlayList[]> {
     const videos = await player.search(query, {
       limit: 10,
       source: { youtube: 'video' },

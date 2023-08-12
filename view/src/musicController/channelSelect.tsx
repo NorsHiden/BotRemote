@@ -47,17 +47,24 @@ export const ChannelsSelect = ({ currentGuild }: { currentGuild: Guild }) => {
   const joinOrLeave = () => {
     if (!selectedChannel) return;
     if (isJoined) {
-      axios.post(`/api/voices/${currentGuild.id}/${selectedChannel.id}/leave`);
-      setIsJoined(false);
+      axios
+        .post(`/api/voices/${currentGuild.id}/${selectedChannel.id}/leave`)
+        .then(() => {
+          setIsJoined(false);
+        });
     } else {
-      axios.post(`/api/voices/${currentGuild.id}/${selectedChannel.id}/join`);
-      setIsJoined(true);
+      axios
+        .post(`/api/voices/${currentGuild.id}/${selectedChannel.id}/join`)
+        .then(() => {
+          setIsJoined(true);
+        });
     }
   };
 
   useEffect(() => {
-    if (!selectedChannel) return;
+    if (!selectedChannel || !currentGuild.id) return;
     axios.get(`/api/voices/${currentGuild.id}/current-voice`).then((res) => {
+      if (!res.data.channelId) return setIsJoined(false);
       setIsJoined(res.data.channelId === selectedChannel.id);
     });
   }, [selectedChannel, currentGuild]);
@@ -78,7 +85,9 @@ export const ChannelsSelect = ({ currentGuild }: { currentGuild: Guild }) => {
             className="channel-icon"
           />
           <div className="channel-name">
-            {selectedChannel ? selectedChannel.name : "Select a channel..."}
+            {selectedChannel.name
+              ? selectedChannel.name
+              : "Select a channel..."}
           </div>
           <icons.ArrowDown2
             size="20"

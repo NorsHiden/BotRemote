@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { YouTubeVideo } from "play-dl";
+import { YouTubePlayList } from "play-dl";
 import * as icons from "iconsax-react";
 import { Guild, Queue } from "../types";
 
 interface SearchResultItemProps {
-  result: YouTubeVideo;
+  result: YouTubePlayList;
   currentGuild: Guild;
   queue: Queue[];
 }
@@ -17,7 +17,7 @@ const SearchResultItem = ({
   queue,
 }: SearchResultItemProps) => {
   const [isAdded, setIsAdded] = useState<boolean>();
-  const sendToQueue = (result: YouTubeVideo) => {
+  const sendToQueue = (result: YouTubePlayList) => {
     axios
       .post(`/api/voices/${currentGuild.id}/queue?url=${result.url}`)
       .then(() => {
@@ -33,10 +33,7 @@ const SearchResultItem = ({
 
   return (
     <button className="search-result-item" onClick={() => sendToQueue(result)}>
-      <img
-        className="search-result-item-picture"
-        src={result.thumbnails[0].url}
-      />
+      <img className="search-result-item-picture" src={result.thumbnail?.url} />
       <div className="search-result-item-info">
         <div className="search-result-item-title">{result.title}</div>
         <div className="search-result-item-author">{result.channel?.name}</div>
@@ -68,7 +65,7 @@ interface SearchProps {
 export const Search = ({ currentGuild, queue }: SearchProps) => {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 300);
-  const [searchResults, setSearchResults] = useState<YouTubeVideo[]>([]);
+  const [searchResults, setSearchResults] = useState<YouTubePlayList[]>([]);
 
   useEffect(() => {
     if (debouncedSearch === "") {

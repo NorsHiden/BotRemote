@@ -144,7 +144,7 @@ export const MusicPlayer = ({ currentGuild, queueState }: MusicQueueProps) => {
       setCurrentPlaying(update.currentPlaying);
       setIsLooping(update.isLooping);
     };
-  }, [currentGuild, queueState]);
+  }, [currentGuild]);
 
   return (
     <div className="music-player">

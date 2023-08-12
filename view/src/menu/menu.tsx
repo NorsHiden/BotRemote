@@ -20,7 +20,7 @@ const GuildItem = ({ id, img, name }: GuildItemProps) => {
   );
 };
 
-const GuildDropdown = ({ guilds }: {guilds: Guild[]}) => {
+const GuildDropdown = ({ guilds }: { guilds: Guild[] }) => {
   return (
     <div className="guild-dropdown">
       {guilds.map((guild) => (
@@ -51,7 +51,7 @@ const GuildSection = ({
     <>
       <button className="guild-select" onClick={dropDownHandler}>
         {currentGuild ? (
-          <img className="guild-picture" src={currentGuild.iconURL|| ""}></img>
+          <img className="guild-picture" src={currentGuild.iconURL || ""}></img>
         ) : (
           <div className="guild-picture"></div>
         )}
@@ -81,7 +81,6 @@ export const Menu = ({ guilds, currentGuild }: MenuProps) => {
     axios
       .get("/api/user/@me")
       .then((res) => {
-        console.log(res.data);
         setProfile(res.data);
       })
       .catch((error) => {
