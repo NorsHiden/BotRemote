@@ -1,4 +1,4 @@
-import { createAudioPlayer, joinVoiceChannel } from '@discordjs/voice';
+import { joinVoiceChannel } from '@discordjs/voice';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Client } from 'discord.js';
 import {
@@ -6,7 +6,7 @@ import {
   GuildsConnectionService,
   createGuildConnection,
 } from 'src/guilds/services/guildsconnection.service';
-import player, { YouTubePlayList } from 'play-dl';
+import player, { YouTubeVideo } from 'play-dl';
 
 @Injectable()
 export class VoiceServices {
@@ -68,11 +68,10 @@ export class VoiceServices {
     return guild.voice.joinConfig.channelId;
   }
 
-  async searchYoutube(query: string): Promise<YouTubePlayList[]> {
-    const videos = await player.search(query, {
+  async searchYoutube(query: string): Promise<YouTubeVideo[]> {
+    return await player.search(query, {
       limit: 10,
       source: { youtube: 'video' },
     });
-    return videos;
   }
 }

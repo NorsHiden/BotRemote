@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "npm i -w view && npm i -w api && npm run build -w view && npm run build -w api"
+    "build": "npm i -w view && npm i -w api && npm run build -w api"
   },
   "workspaces": [
     "view", "api"
